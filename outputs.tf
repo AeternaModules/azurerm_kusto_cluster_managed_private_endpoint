@@ -1,3 +1,7 @@
+output "kusto_cluster_managed_private_endpoints_id" {
+  description = "Map of id values across all kusto_cluster_managed_private_endpoints, keyed the same as var.kusto_cluster_managed_private_endpoints"
+  value       = { for k, v in azurerm_kusto_cluster_managed_private_endpoint.kusto_cluster_managed_private_endpoints : k => v.id }
+}
 output "kusto_cluster_managed_private_endpoints_cluster_name" {
   description = "Map of cluster_name values across all kusto_cluster_managed_private_endpoints, keyed the same as var.kusto_cluster_managed_private_endpoints"
   value       = { for k, v in azurerm_kusto_cluster_managed_private_endpoint.kusto_cluster_managed_private_endpoints : k => v.cluster_name }
