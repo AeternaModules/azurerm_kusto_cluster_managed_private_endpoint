@@ -21,38 +21,6 @@ EOT
     private_link_resource_region = optional(string)
     request_message              = optional(string)
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.kusto_cluster_managed_private_endpoints : (
-        length(v.name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.kusto_cluster_managed_private_endpoints : (
-        length(v.group_id) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.kusto_cluster_managed_private_endpoints : (
-        v.private_link_resource_region == null || (length(v.private_link_resource_region) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.kusto_cluster_managed_private_endpoints : (
-        v.request_message == null || (length(v.request_message) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_kusto_cluster_managed_private_endpoint's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -75,9 +43,21 @@ EOT
   #   source:    [from validate.ClusterName] !regexp.MustCompile(`^[a-z][a-z0-9\-]+$`).MatchString(name)
   # path: cluster_name
   #   source:    [from validate.ClusterName] len(name) < 4 || len(name) > 22
+  # path: name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: private_link_resource_id
   #   source:    [from azure.ValidateResourceID] !ok
   # path: private_link_resource_id
   #   source:    [from azure.ValidateResourceID] err != nil
+  # path: group_id
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: private_link_resource_region
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: request_message
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
